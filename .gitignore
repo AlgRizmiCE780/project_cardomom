@@ -1,1 +1,11 @@
 .vscode/settings.json
+# Ignore image files
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tiff
+
+**/*.jpg
+**/*.png
