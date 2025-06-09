@@ -1,0 +1,87 @@
+The .pt file my_efv_epoch25_batch size8
+
+
+this model is trained with cardamom image set
+weight decay=1e-4
+max_lr(learning rate)=0.01
+gradient_clip=0.01
+epoch=25
+neural network used=efficientnetb1
+opt_func = torch.optim.adam
+accuracy=97.3
+
+my_efv_cardamom_update2.pt
+batch size 4
+weight decay=1e-6   
+epochs = 25
+max_lr = 0.01
+grad_clip = 0.1
+opt_func = torch.optim.SGD
+neural network used=efficientnetb1
+accuracy=99
+
+my_efv_cardamom_update3.pt
+batch size=4
+epochs = 25
+max_lr = 0.01
+grad_clip = 0.1
+opt_func = torch.optim.RMSprop
+history += fit_OneCycle(epochs, max_lr, model, train_dl, valid_dl, 
+                            grad_clip=grad_clip, 
+                            weight_decay=1e-6, 
+                            opt_func=opt_func)
+neural network used=efficientnetb1
+
+new trainings  
+*batch size 8
+weight decay=1e-2   
+epochs = 50
+max_lr = 0.001
+grad_clip = 1
+opt_func = torch.Adam
+neural network used=efficientnetb4
+
+
+# Architecture for training
+
+# convolution block with BatchNormalization
+def ConvBlock(in_channels, out_channels, pool=False):
+    layers = [nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1),
+             nn.BatchNorm2d(out_channels),
+             nn.ReLU(inplace=True)]
+    if pool:
+        layers.append(nn.MaxPool2d(4))
+    return nn.Sequential(*layers)
+
+
+# resnet architecture 
+class ResNet9(ImageClassificationBase):
+    def __init__(self, in_channels, num_diseases):
+        super().__init__()
+        
+        self.conv1 = ConvBlock(in_channels, 64)
+        self.conv2 = ConvBlock(64, 128, pool=True) # out_dim : 128 x 64 x 64 
+        self.res1 = nn.Sequential(ConvBlock(128, 128), ConvBlock(128, 128))
+        
+        self.conv3 = ConvBlock(128, 256, pool=True) # out_dim : 256 x 16 x 16
+        self.conv4 = ConvBlock(256, 512, pool=True) # out_dim : 512 x 4 x 44
+        self.res2 = nn.Sequential(ConvBlock(512, 512), ConvBlock(512, 512))
+        
+        self.classifier = nn.Sequential(nn.MaxPool2d(4),
+                                       nn.Flatten(),
+                                       nn.Linear(512, num_diseases))
+        
+    def forward(self, xb): # xb is the loaded batch
+        out = self.conv1(xb)
+        out = self.conv2(out)
+        out = self.res1(out) + out
+        out = self.conv3(out)
+        out = self.conv4(out)
+        out = self.res2(out) + out
+        out = self.classifier(out)
+        return out
+
+
+
+
+
