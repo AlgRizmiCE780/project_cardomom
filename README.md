@@ -16,47 +16,70 @@ This work implements and compares EfficientNet-based classifiers with custom Res
 - Built custom ResNet9 architecture for benchmarking.
 
 ---
+# 🌿 Cardamom Disease Detection using Deep Learning
 
-## 🧠 Model Architectures
+This repository presents a deep learning project focused on classifying cardamom plant diseases using advanced CNN architectures (EfficientNet and ResNet). The dataset was collected in collaboration with the Indian Cardamom Research Institute (ICRI), Mayladumpara, Idukki, over a span of 65 days during summer.
 
-### 1. EfficientNet Models
-
-#### `my_efv_epoch25_batchsize8.pt`
-- Epochs: 25
-- Batch Size: 8
-- Optimizer: `torch.optim.Adam`
-- Weight Decay: `1e-4`
-- Learning Rate: `0.01`
-- Gradient Clipping: `0.01`
-- Accuracy: **87.3%**
-
-#### `my_efv_cardamom_update2.pt`
-- Epochs: 25
-- Batch Size: 4
-- Optimizer: `torch.optim.SGD`
-- Weight Decay: `1e-6`
-- Learning Rate: `0.01`
-- Gradient Clipping: `0.1`
-- Accuracy: **79%**
-
-#### `my_efv_cardamom_update3.pt`
-- Epochs: 25
-- Batch Size: 4
-- Optimizer: `torch.optim.RMSprop`
-- Weight Decay: `1e-6`
-- Learning Rate: `0.01`
-- Gradient Clipping: `0.1`
-- Accuracy: *Not recorded*
-
-#### Latest Training (EfficientNetB4)
-- Epochs: 50
-- Batch Size: 8
-- Optimizer: `torch.optim.Adam`
-- Weight Decay: `1e-2`
-- Learning Rate: `0.001`
-- Gradient Clipping: `1.0`
-- Accuracy: **88.31%**
+> ⚠️ **Note:** Due to data-sharing restrictions, the dataset is not included in this repository. The project is strictly for academic and research purposes.
 
 ---
 
+## 📸 Dataset Overview
 
+The dataset was built from real-world field images captured under expert supervision from ICRI. It consists of three classes:
+- **Healthy**
+- **Leaf Blight**
+- **Leaf Spot**
+
+**Data Collection Duration:** 65 days  
+**Conditions:** Outdoor summer lighting  
+**Preprocessing Techniques:**  
+- Image normalization  
+- Augmentation (rotation, flipping, zoom)  
+- Stratified train-validation split  
+- Label encoding and resizing to uniform dimensions
+
+---
+
+## 🧠 Model Architectures
+
+We experimented with the following models:
+
+### ✅ EfficientNet Models
+
+| Model Name                      | Optimizer  | Batch Size | LR    | Weight Decay | Clip Val | Epochs | Accuracy |
+|--------------------------------|------------|------------|-------|--------------|----------|--------|----------|
+| `my_efv_epoch25_batchsize8.pt` | Adam       | 8          | 0.01  | 1e-4         | 0.01     | 25     | 87.3%    |
+| `my_efv_cardamom_update2.pt`   | SGD        | 4          | 0.01  | 1e-6         | 0.1      | 25     | 79%      |
+| `my_efv_cardamom_update3.pt`   | RMSprop    | 4          | 0.01  | 1e-6         | 0.1      | 25     | N/A      |
+| `EfficientNetB4 (latest)`      | Adam       | 8          | 0.001 | 1e-2         | 1.0      | 50     | 88.31%   |
+
+### 🏗️ Custom ResNet9
+
+Developed a simplified ResNet9 variant for benchmarking with fewer parameters but competitive performance for edge deployment scenarios.
+
+---
+
+## 🔍 Project Highlights
+
+- Built the dataset from scratch in a real-world agricultural setting.
+- Focused on lightweight CNNs for mobile/edge deployment.
+- Model designed for ONNX conversion and integration into drones/rovers for autonomous field scanning.
+- Implemented real-time webcam inference prototype (proof-of-concept).
+- Tested with multiple optimizers (Adam, SGD, RMSprop) and learning configurations.
+## 🚀 Future Work
+
+- Real-time drone integration for automated disease monitoring.
+- Expand dataset with more disease categories and seasonal variations.
+- Edge deployment using ONNX and NVIDIA Jetson/Coral TPU boards.
+
+## 📚 Tech Stack
+
+- Python, PyTorch
+- torchvision, albumentations
+- EfficientNet, ResNet
+- matplotlib, seaborn
+- OpenCV (for webcam inference)
+
+## 📝 License
+This project is licensed for **academic use only**. Please contact the author for any commercial or field deployment inquiries.
